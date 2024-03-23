@@ -7,7 +7,7 @@ export function Header() {
   return (
     <Tooltip.Provider>
       <header className="bg-white py-4 px-6 md:px-12 flex justify-between items-center">
-        <h1 className="text-xl font-bold">Tutornext</h1>
+        <h1 className="text-xl font-bold">Testing Name</h1>
         <nav>
           <ul className="flex space-x-4">
             {['Home', 'About', 'Features', 'Pricing'].map((item) => (
