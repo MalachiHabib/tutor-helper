@@ -2,12 +2,17 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import './test.css';
+import { useAuth } from '../auth/AuthProvider';
+import { LogoutButton } from './auth/LogoutButton';
+import { LoginButton } from './auth/LoginButton';
 
 export function Header() {
+  const { user } = useAuth();
+
   return (
     <Tooltip.Provider>
       <header className="bg-white py-4 px-6 md:px-12 flex justify-between items-center">
-        <h1 className="text-xl font-bold">Testing Name</h1>
+        <h1 className="text-xl font-bold">Not sure on the name yet </h1>
         <nav>
           <ul className="flex space-x-4">
             {['Home', 'About', 'Features', 'Pricing'].map((item) => (
@@ -23,7 +28,7 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        <SignUpDialog />
+        {user ? <LogoutButton /> : <LoginButton />}
       </header>
     </Tooltip.Provider>
   );
