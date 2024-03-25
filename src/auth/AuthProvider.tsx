@@ -1,3 +1,4 @@
+import { User, signOut } from 'firebase/auth';
 import {
   createContext,
   useContext,
@@ -5,15 +6,12 @@ import {
   ReactNode,
   FunctionComponent,
 } from 'react';
-
-interface AuthUser {
-  name?: string;
-  email?: string;
-}
+import { auth } from '../../firebaseConfig';
 
 interface AuthContextType {
-  user: AuthUser | null;
-  setUser: (user: AuthUser | null) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
+  logoutUser: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -25,7 +23,6 @@ export const useAuth = (): AuthContextType => {
   }
   return context;
 };
-
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -33,9 +30,20 @@ interface AuthProviderProps {
 export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
   children,
 }) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  const value = { user, setUser };
+  const logoutUser = () => {
+    signOut(auth)
+      .then(() => {
+        setUser(null);
+        console.log(user);
+      })
+      .catch((error) => {
+        console.error('Error signing out:', error);
+      });
+  };
+
+  const value = { user, setUser, logoutUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

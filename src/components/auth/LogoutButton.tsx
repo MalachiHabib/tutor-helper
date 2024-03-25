@@ -1,23 +1,16 @@
-import { googleLogout } from '@react-oauth/google';
 import { useAuth } from '../../auth/AuthProvider';
+import { isUser } from '../../utils/typeGuards';
 
 export function LogoutButton() {
-  const { setUser } = useAuth();
+  const { user, logoutUser } = useAuth();
 
-  const handleLogout = () => {
-    // Clear user from context
-    setUser(null);
-
-    // Perform Google logout
-    googleLogout();
-  };
+  if (!isUser(user)) {
+    return null;
+  }
 
   return (
-    <button
-      onClick={handleLogout}
-      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Logout
+    <button onClick={logoutUser} className='btn'>
+      Logout {user.displayName}
     </button>
   );
 }
