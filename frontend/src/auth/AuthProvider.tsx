@@ -36,7 +36,6 @@ export const AuthProvider: FunctionComponent<AuthProviderProps> = ({
     signOut(auth)
       .then(() => {
         setUser(null);
-        console.log(user);
       })
       .catch((error) => {
         console.error('Error signing out:', error);
