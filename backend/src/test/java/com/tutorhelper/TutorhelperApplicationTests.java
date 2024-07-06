@@ -1,4 +1,4 @@
-package com.tutorhelper.tutorhelper;
+package com.tutorhelper;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
