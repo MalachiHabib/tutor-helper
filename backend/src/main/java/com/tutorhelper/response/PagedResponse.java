@@ -1,22 +1,16 @@
-package com.tutorhelper.response;//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
+package com.tutorhelper.response;
 
 import java.util.List;
+import lombok.Data;
 
-public record PagedResponse<T>(List<T> data, int count) {
-    public PagedResponse(List<T> data, int count) {
-        this.data = data;
-        this.count = count;
+@Data
+public class PagedResponse<T> {
+
+    private final List<T> data;
+    private final int count;
+
+    public static <T> PagedResponse<T> from(List<T> content) {
+        return new PagedResponse<>(content, content.size());
     }
 
-    public List<T> data() {
-        return this.data;
-    }
-
-    public int count() {
-        return this.count;
-    }
 }
