@@ -7,6 +7,6 @@ import lombok.Data;
 public class UserDTO {
 
     @NotEmpty(message = "name cannot be empty")
-    private String name;
+    private String firstName;
 
 }
