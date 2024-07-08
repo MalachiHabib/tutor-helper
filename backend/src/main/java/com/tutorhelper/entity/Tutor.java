@@ -1,19 +1,25 @@
 package com.tutorhelper.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.HashSet;
 import java.util.Set;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = true)
-@PrimaryKeyJoinColumn(name = "id")
+@NoArgsConstructor
+@DiscriminatorValue("TUTOR")
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Tutor extends User {
 
-    @ManyToMany(mappedBy = "tutors")
-    private Set<Student> students;
-    
+    @ManyToMany(mappedBy = "tutors", fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private Set<Student> students = new HashSet<>();
+
+    @EqualsAndHashCode.Include
+    @Override
+    public Long getId() {
+        return super.getId();
+    }
 }

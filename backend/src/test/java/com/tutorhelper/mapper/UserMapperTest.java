@@ -17,27 +17,27 @@ class UserMapperTest {
         // Given
         User user = new User();
         user.setId(1L);
-        user.setName("John Doe");
+        user.setFirstName("John Doe");
 
         // When
         UserDTO userDTO = userMapper.userToUserDTO(user);
 
         // Then
         assertNotNull(userDTO);
-        assertEquals("John Doe", userDTO.getName());
+        assertEquals("John Doe", userDTO.getFirstName());
     }
 
     @Test
     void testUserDTOToUser() {
         // Given
         UserDTO userDTO = new UserDTO();
-        userDTO.setName("John Doe");
+        userDTO.setFirstName("John Doe");
 
         // When
         User user = userMapper.userDTOToUser(userDTO);
 
         // Then
         assertNotNull(user);
-        assertEquals("John Doe", user.getName());
+        assertEquals("John Doe", user.getFirstName());
     }
 }

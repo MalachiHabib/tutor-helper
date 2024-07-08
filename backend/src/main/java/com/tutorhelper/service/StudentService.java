@@ -12,53 +12,52 @@ import com.tutorhelper.repository.TutorRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public class TutorService {
+public class StudentService {
 
-    private final TutorRepository tutorRepository;
+    private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
     private final TutorMapper tutorMapper;
 
-    public Long createTutor(TutorDTO tutorDTO) {
-        Tutor tutor = tutorMapper.tutorDTOToTutor(tutorDTO);
-        tutorRepository.save(tutor);
-        return tutor.getId();
+    public Long createStudent(StudentDTO studentDTO) {
+        Student student = studentMapper.studentDTOToStudent(studentDTO);
+        studentRepository.save(student);
+        return student.getId();
     }
 
-    public TutorDTO get(Long id) {
-        return tutorRepository.findById(id)
-          .map(tutorMapper::tutorToTutorDTO)
+    public StudentDTO get(Long id) {
+        return studentRepository.findById(id)
+          .map(studentMapper::studentToStudentDTO)
           .orElseThrow(() -> new EntityNotFoundException(
             String.format(ErrorMessages.USER_NOT_FOUND, id)
           ));
     }
 
-    public List<TutorDTO> getAll() {
-        return tutorRepository.findAllWithStudents()
+    public List<StudentDTO> getAll() {
+        return studentRepository.findAllWithTutors()
           .stream()
-          .map(tutorMapper::tutorToTutorDTO)
+          .map(studentMapper::studentToStudentDTO)
           .toList();
     }
 
     public void deleteById(Long id) {
-        if (!tutorRepository.existsById(id)) {
-            // todo: update the error messages to take a type (e.g. tutor)
+        if (!studentRepository.existsById(id)) {
             throw new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, id));
         }
-        tutorRepository.deleteById(id);
+        studentRepository.deleteById(id);
     }
 
-    public List<Long> getStudentIdsForTutor(Long tutorId) {
-        return tutorRepository.findById(tutorId)
-          .map(tutor -> tutor.getStudents().stream()
-            .map(Student::getId)
+    public List<Long> getTutorIdsForStudent(Long studentId) {
+        return studentRepository.findById(studentId)
+          .map(student -> student.getTutors().stream()
+            .map(Tutor::getId)
             .collect(Collectors.toList()))
-          .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, tutorId)));
+          .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentId));
     }
 
 }

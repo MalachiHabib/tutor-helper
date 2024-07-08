@@ -1,6 +1,7 @@
 package com.tutorhelper.controller;
 
 import com.tutorhelper.config.Paths;
+import com.tutorhelper.dto.StudentDTO;
 import com.tutorhelper.dto.TutorDTO;
 import com.tutorhelper.response.PagedResponse;
 import com.tutorhelper.service.TutorService;
@@ -50,10 +51,10 @@ public class TutorController {
         return ResponseEntity.noContent().build();
     }
 
-//    @GetMapping("/{tutorId}/students")
-//    public ResponseEntity<List<StudentDTO>> getTutorStudents(@PathVariable Long tutorId) {
-//        List<StudentDTO> students = tutorService.getStudentsForTutor(tutorId);
-//        return ResponseEntity.ok(students);
-//    }
+    @GetMapping("/{tutorId}/student-ids")
+    public ResponseEntity<List<Long>> getTutorStudentIds(@PathVariable Long tutorId) {
+        List<Long> studentIds = tutorService.getStudentIdsForTutor(tutorId);
+        return ResponseEntity.ok(studentIds);
+    }
 
 }

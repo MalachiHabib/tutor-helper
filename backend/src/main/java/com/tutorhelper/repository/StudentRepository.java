@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TutorRepository extends UserBaseRepository<Tutor> {
+public interface StudentRepository extends UserBaseRepository<Student> {
 
-    @Query("SELECT DISTINCT s FROM Tutor s LEFT JOIN FETCH s.students")
-    List<Tutor> findAllWithStudents();
+    @Query("SELECT DISTINCT s FROM Student s LEFT JOIN FETCH s.tutors")
+    List<Student> findAllWithTutors();
 
-    @EntityGraph(attributePaths = {"students"})
+    @EntityGraph(attributePaths = {"tutors"})
     @NonNull
-    Optional<Tutor> findById(@NonNull Long id);
+    Optional<Student> findById(@NonNull Long id);
 
 }
