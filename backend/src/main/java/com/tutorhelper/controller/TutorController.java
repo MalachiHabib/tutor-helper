@@ -1,14 +1,14 @@
 package com.tutorhelper.controller;
 
 import com.tutorhelper.config.Paths;
-import com.tutorhelper.dto.StudentDTO;
-import com.tutorhelper.dto.TutorDTO;
+import com.tutorhelper.dto.tutor.TutorDTO;
 import com.tutorhelper.response.PagedResponse;
 import com.tutorhelper.service.TutorService;
 import com.tutorhelper.util.LocationURIBuilder;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,8 +52,8 @@ public class TutorController {
     }
 
     @GetMapping("/{tutorId}/student-ids")
-    public ResponseEntity<List<Long>> getTutorStudentIds(@PathVariable Long tutorId) {
-        List<Long> studentIds = tutorService.getStudentIdsForTutor(tutorId);
+    public ResponseEntity<Set<Long>> getTutorStudentIds(@PathVariable Long tutorId) {
+        Set<Long> studentIds = tutorService.getStudentIdsForTutor(tutorId);
         return ResponseEntity.ok(studentIds);
     }
 

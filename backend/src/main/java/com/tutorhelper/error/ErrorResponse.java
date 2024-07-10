@@ -1,11 +1,12 @@
 package com.tutorhelper.error;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.List;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
 
 @Getter
 public class ErrorResponse {

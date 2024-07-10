@@ -19,10 +19,10 @@ public class UserAssociationService {
     @Transactional
     public void associateStudentAndTutor(Long studentId, Long tutorId) {
         Student student = studentRepository.findById(studentId)
-          .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentId));
+            .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentId));
 
         Tutor tutor = tutorRepository.findById(tutorId)
-          .orElseThrow(() -> new EntityNotFoundException("Tutor not found with id: " + tutorId));
+            .orElseThrow(() -> new EntityNotFoundException("Tutor not found with id: " + tutorId));
 
         student.getTutors().add(tutor);
         tutor.getStudents().add(student);
@@ -34,10 +34,10 @@ public class UserAssociationService {
     @Transactional
     public void disassociateStudentAndTutor(Long studentId, Long tutorId) {
         Student student = studentRepository.findById(studentId)
-          .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentId));
+            .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentId));
 
         Tutor tutor = tutorRepository.findById(tutorId)
-          .orElseThrow(() -> new EntityNotFoundException("Tutor not found with id: " + tutorId));
+            .orElseThrow(() -> new EntityNotFoundException("Tutor not found with id: " + tutorId));
 
         student.getTutors().remove(tutor);
         tutor.getStudents().remove(student);
