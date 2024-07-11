@@ -8,37 +8,96 @@ import com.tutorhelper.entity.Student;
 import com.tutorhelper.entity.Tutor;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface StudentMapper {
+@Component
+public final class StudentMapper {
 
-    @Mapping(target = "tutorIds", source = "tutors", qualifiedByName = "tutorsToIds")
-    StudentResponseDTO toResponseDTO(Student student);
+    public StudentResponseDTO toResponseDTO(Student student) {
+        if (student == null) {
+            return null;
+        }
 
-    @Mapping(target = "tutorIds", source = "tutors", qualifiedByName = "tutorsToIds")
-    CreateStudentDTO toCreateDTO(Student student);
+        StudentResponseDTO studentResponseDTO = new StudentResponseDTO();
 
-    @Mapping(target = "tutorCount", expression = "java(student.getTutors().size())")
-    @Mapping(target = "fullName", expression = "java(student.getFirstName() + ' ' + student.getLastName())")
-    StudentSummaryDTO toSummaryDTO(Student student);
+        studentResponseDTO.setTutorIds(tutorsToIds(student.getTutors()));
+        studentResponseDTO.setId(student.getId());
+        studentResponseDTO.setFirstName(student.getFirstName());
+        studentResponseDTO.setLastName(student.getLastName());
+        studentResponseDTO.setEmail(student.getEmail());
+        studentResponseDTO.setPhone(student.getPhone());
 
-    @Mapping(target = "tutors", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    Student toEntity(CreateStudentDTO createStudentDTO);
+        return studentResponseDTO;
+    }
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "tutors", ignore = true)
-    void updateEntityFromDTO(UpdateStudentDTO updateStudentDTO, @MappingTarget Student student);
+    public CreateStudentDTO toCreateDTO(Student student) {
+        if (student == null) {
+            return null;
+        }
 
-    @Named("tutorsToIds")
-    default Set<Long> tutorsToIds(Set<Tutor> tutors) {
+        CreateStudentDTO createStudentDTO = new CreateStudentDTO();
+
+        createStudentDTO.setTutorIds(tutorsToIds(student.getTutors()));
+        createStudentDTO.setId(student.getId());
+        createStudentDTO.setFirstName(student.getFirstName());
+        createStudentDTO.setLastName(student.getLastName());
+        createStudentDTO.setEmail(student.getEmail());
+        createStudentDTO.setPhone(student.getPhone());
+
+        return createStudentDTO;
+    }
+
+    public StudentSummaryDTO toSummaryDTO(Student student) {
+        if (student == null) {
+            return null;
+        }
+
+        StudentSummaryDTO studentSummaryDTO = new StudentSummaryDTO();
+
+        studentSummaryDTO.setId(student.getId());
+        studentSummaryDTO.setEmail(student.getEmail());
+
+        studentSummaryDTO.setTutorCount(student.getTutors().size());
+        studentSummaryDTO.setFullName(student.getFirstName() + ' ' + student.getLastName());
+
+        return studentSummaryDTO;
+    }
+
+    public Student toEntity(CreateStudentDTO createStudentDTO) {
+        if (createStudentDTO == null) {
+            return null;
+        }
+
+        Student student = new Student();
+
+        student.setFirstName(createStudentDTO.getFirstName());
+        student.setLastName(createStudentDTO.getLastName());
+        student.setEmail(createStudentDTO.getEmail());
+        student.setPhone(createStudentDTO.getPhone());
+
+        return student;
+    }
+
+    public void updateEntityFromDTO(UpdateStudentDTO updateStudentDTO, Student student) {
+        if (updateStudentDTO == null) {
+            return;
+        }
+
+        if (updateStudentDTO.getFirstName() != null) {
+            student.setFirstName(updateStudentDTO.getFirstName());
+        }
+        if (updateStudentDTO.getLastName() != null) {
+            student.setLastName(updateStudentDTO.getLastName());
+        }
+        if (updateStudentDTO.getEmail() != null) {
+            student.setEmail(updateStudentDTO.getEmail());
+        }
+        if (updateStudentDTO.getPhone() != null) {
+            student.setPhone(updateStudentDTO.getPhone());
+        }
+    }
+
+    private Set<Long> tutorsToIds(Set<Tutor> tutors) {
         return tutors == null ? null : tutors.stream()
             .map(Tutor::getId)
             .collect(Collectors.toSet());
