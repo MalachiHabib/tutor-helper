@@ -10,6 +10,7 @@ import com.tutorhelper.entity.Tutor;
 import com.tutorhelper.mapper.StudentMapper;
 import com.tutorhelper.repository.StudentRepository;
 import com.tutorhelper.repository.TutorRepository;
+import com.tutorhelper.util.IntuitiveCollectionUtils;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
@@ -31,24 +32,33 @@ public class StudentService {
     private final StudentMapper studentMapper;
 
     @Transactional
+    @CacheEvict(value = "allStudents", allEntries = true)
+    @CachePut(value = "students", key = "#result")
     public Long createStudent(CreateStudentDTO createStudentDTO) {
         Student student = studentMapper.toEntity(createStudentDTO);
-        if (createStudentDTO.getTutorIds() != null && !createStudentDTO.getTutorIds().isEmpty()) {
-            Set<Tutor> tutors = new HashSet<>(tutorRepository.findAllById(createStudentDTO.getTutorIds()));
+        assignTutorsToStudent(student, createStudentDTO.getTutorIds());
+        return saveAndReturnStudentId(student);
+    }
+
+    private void assignTutorsToStudent(Student student, Set<Long> tutorIds) {
+        if (IntuitiveCollectionUtils.isNotEmpty(tutorIds)) {
+            Set<Tutor> tutors = new HashSet<>(tutorRepository.findAllById(tutorIds));
             student.setTutors(tutors);
         }
-        studentRepository.save(student);
-        return student.getId();
+    }
+
+    private Long saveAndReturnStudentId(Student student) {
+        return studentRepository.save(student).getId();
     }
 
     @Transactional
     @CachePut(value = "students", key = "#studentId")
+    @CacheEvict(value = "allStudents", allEntries = true)
     public StudentResponseDTO updateStudent(Long studentId, UpdateStudentDTO updateStudentDTO) {
         Student student = studentRepository.findById(studentId)
-            .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentId));
+            .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, studentId)));
 
         studentMapper.updateEntityFromDTO(updateStudentDTO, student);
-
         student = studentRepository.save(student);
         return studentMapper.toResponseDTO(student);
     }
@@ -63,19 +73,17 @@ public class StudentService {
     }
 
     @Transactional
-    @CacheEvict(value = "students", key = "#id")
+    @CacheEvict(value = {"students", "allStudents"}, allEntries = true)
     public void deleteById(Long id) {
         Student student = studentRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, id)));
 
-        // Remove this student from all associated tutors
-        for (Tutor tutor : student.getTutors()) {
-            tutor.getStudents().remove(student);
-        }
-
+        // remove the students from the tutors before deleting
+        student.getTutors().forEach(tutor -> tutor.getStudents().remove(student));
         studentRepository.delete(student);
     }
 
+    @Cacheable(value = "allStudents")
     public List<StudentSummaryDTO> getAll() {
         return studentRepository
             .findAll()
@@ -84,6 +92,7 @@ public class StudentService {
             .toList();
     }
 
+    @Cacheable(value = "students", key = "#studentId")
     public Set<Long> getTutorIdsForStudent(Long studentId) {
         return studentRepository.findById(studentId)
             .map(student -> student.getTutors().stream()
@@ -93,6 +102,7 @@ public class StudentService {
     }
 
     @Transactional
+    @CacheEvict(value = {"students", "allStudents"}, allEntries = true)
     public void updateStudentTutors(Long studentId, Set<Long> tutorIds) {
         Student student = studentRepository.findById(studentId)
             .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, studentId)));
@@ -109,7 +119,6 @@ public class StudentService {
 
         // Add student to new tutors
         newTutors.forEach(tutor -> tutor.getStudents().add(student));
-
         studentRepository.save(student);
     }
 }
