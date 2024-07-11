@@ -8,7 +8,7 @@ import java.util.Set;
 import lombok.Data;
 
 @Data
-public class TutorDTO {
+public class CreateTutorDTO {
 
     @Null(message = "ID must be null for new tutors (it is auto generated)")
     private Long id;

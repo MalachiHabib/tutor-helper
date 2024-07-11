@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CacheConfig {
 
-    private static final List<String> CACHE_NAMES = Arrays.asList("students", "allStudents");
+    private static final List<String> CACHE_NAMES = Arrays.asList("students", "allStudents", "tutors", "allTutors");
     private static final int CACHE_EXPIRE_AFTER_WRITE_MINUTES = 15;
     private static final int CACHE_MAXIMUM_SIZE = 100;
 
