@@ -1,33 +1,40 @@
 package com.tutorhelper.controller;
 
 import com.tutorhelper.service.UserAssociationService;
-import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @RestController
-@RequestMapping("/user-association")
-@AllArgsConstructor
+@RequiredArgsConstructor
+@RequestMapping("/user-associations")
 public class UserAssociationController {
 
     private final UserAssociationService userAssociationService;
 
-    @PostMapping("/associate")
+    @PostMapping
     public ResponseEntity<Void> associateStudentAndTutor(
-        @RequestParam Long studentId, @RequestParam Long tutorId
+        @RequestParam @NonNull Long studentId,
+        @RequestParam @NonNull Long tutorId
     ) {
         userAssociationService.associateStudentAndTutor(studentId, tutorId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/disassociate")
+    @DeleteMapping
     public ResponseEntity<Void> disassociateStudentAndTutor(
-        @RequestParam Long studentId, @RequestParam Long tutorId
+        @RequestParam @NonNull Long studentId,
+        @RequestParam @NonNull Long tutorId
     ) {
         userAssociationService.disassociateStudentAndTutor(studentId, tutorId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

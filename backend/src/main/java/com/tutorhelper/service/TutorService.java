@@ -1,5 +1,10 @@
 package com.tutorhelper.service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.tutorhelper.dto.tutor.CreateTutorDTO;
 import com.tutorhelper.dto.tutor.TutorResponseDTO;
 import com.tutorhelper.dto.tutor.TutorSummaryDTO;
@@ -11,10 +16,6 @@ import com.tutorhelper.repository.StudentRepository;
 import com.tutorhelper.repository.TutorRepository;
 import com.tutorhelper.utils.ExceptionUtils;
 import com.tutorhelper.utils.IntuitiveCollectionUtils;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -97,26 +98,5 @@ public class TutorService {
                 .map(Student::getId)
                 .collect(Collectors.toSet()))
             .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Tutor.class, tutorId));
-    }
-
-    @Transactional
-    @CacheEvict(value = {"tutors", "allTutors"}, allEntries = true)
-    public void updateTutorStudents(Long tutorId, Set<Long> studentIds) {
-        Tutor tutor = tutorRepository.findById(tutorId)
-            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Tutor.class, tutorId));
-
-        Set<Student> newStudents = new HashSet<>(studentRepository.findAllById(studentIds));
-
-        // Remove tutor from students that are no longer associated
-        tutor.getStudents().stream()
-            .filter(student -> !newStudents.contains(student))
-            .forEach(student -> student.getTutors().remove(tutor));
-
-        // Update tutor's students
-        tutor.setStudents(newStudents);
-
-        // Add tutor to new students
-        newStudents.forEach(student -> student.getTutors().add(tutor));
-        tutorRepository.save(tutor);
     }
 }

@@ -4,7 +4,7 @@ import com.tutorhelper.entity.Student;
 import com.tutorhelper.entity.Tutor;
 import com.tutorhelper.repository.StudentRepository;
 import com.tutorhelper.repository.TutorRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.tutorhelper.utils.ExceptionUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +19,14 @@ public class UserAssociationService {
     @Transactional
     public void associateStudentAndTutor(Long studentId, Long tutorId) {
         Student student = studentRepository.findById(studentId)
-            .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentId));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Student.class, studentId));
 
         Tutor tutor = tutorRepository.findById(tutorId)
-            .orElseThrow(() -> new EntityNotFoundException("Tutor not found with id: " + tutorId));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Tutor.class, tutorId));
+
+        if (student.getTutors().contains(tutor)) {
+            ExceptionUtils.throwAssociationAlreadyExistsException(Student.class, studentId, Tutor.class, tutorId);
+        }
 
         student.getTutors().add(tutor);
         tutor.getStudents().add(student);
@@ -34,10 +38,14 @@ public class UserAssociationService {
     @Transactional
     public void disassociateStudentAndTutor(Long studentId, Long tutorId) {
         Student student = studentRepository.findById(studentId)
-            .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentId));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Student.class, studentId));
 
         Tutor tutor = tutorRepository.findById(tutorId)
-            .orElseThrow(() -> new EntityNotFoundException("Tutor not found with id: " + tutorId));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Tutor.class, tutorId));
+
+        if (!student.getTutors().contains(tutor)) {
+            throw ExceptionUtils.associationNotFoundException(Student.class, studentId, Tutor.class, tutorId);
+        }
 
         student.getTutors().remove(tutor);
         tutor.getStudents().remove(student);

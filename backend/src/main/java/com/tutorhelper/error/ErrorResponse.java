@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +36,9 @@ public class ErrorResponse {
     }
 
     public static ResponseEntity<ErrorResponse> create(String message, HttpStatus status, List<String> details) {
-        return new ResponseEntity<>(new ErrorResponse(
-            message,
-            Timestamp.from(Instant.now()),
-            status.value(),
-            details
-        ), status);
+        return new ResponseEntity<>(
+            new ErrorResponse(message, Timestamp.from(Instant.now()), status.value(), details),
+            status
+        );
     }
 }

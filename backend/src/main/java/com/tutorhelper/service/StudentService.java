@@ -98,25 +98,4 @@ public class StudentService {
                 .collect(Collectors.toSet()))
             .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Student.class, studentId));
     }
-
-    @Transactional
-    @CacheEvict(value = {"students", "allStudents"}, allEntries = true)
-    public void updateStudentTutors(Long studentId, Set<Long> tutorIds) {
-        Student student = studentRepository.findById(studentId)
-            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Student.class, studentId));
-
-        Set<Tutor> newTutors = new HashSet<>(tutorRepository.findAllById(tutorIds));
-
-        // Remove student from tutors that are no longer associated
-        student.getTutors().stream()
-            .filter(tutor -> !newTutors.contains(tutor))
-            .forEach(tutor -> tutor.getStudents().remove(student));
-
-        // Update student's tutors
-        student.setTutors(newTutors);
-
-        // Add student to new tutors
-        newTutors.forEach(tutor -> tutor.getStudents().add(student));
-        studentRepository.save(student);
-    }
 }
