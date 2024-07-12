@@ -1,6 +1,5 @@
 package com.tutorhelper.service;
 
-import com.tutorhelper.config.ErrorMessages;
 import com.tutorhelper.dto.tutor.CreateTutorDTO;
 import com.tutorhelper.dto.tutor.TutorResponseDTO;
 import com.tutorhelper.dto.tutor.TutorSummaryDTO;
@@ -10,8 +9,8 @@ import com.tutorhelper.entity.Tutor;
 import com.tutorhelper.mapper.TutorMapper;
 import com.tutorhelper.repository.StudentRepository;
 import com.tutorhelper.repository.TutorRepository;
+import com.tutorhelper.utils.ExceptionUtils;
 import com.tutorhelper.utils.IntuitiveCollectionUtils;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +36,7 @@ public class TutorService {
     public Long createTutor(CreateTutorDTO createTutorDTO) {
         Tutor tutor = tutorMapper.toEntity(createTutorDTO);
         assignStudentsToTutor(tutor, createTutorDTO.getStudentIds());
-        return saveAndReturnTutorId(tutor);
+        return tutorRepository.save(tutor).getId();
     }
 
     private void assignStudentsToTutor(Tutor tutor, Set<Long> studentIds) {
@@ -47,16 +46,12 @@ public class TutorService {
         }
     }
 
-    private Long saveAndReturnTutorId(Tutor tutor) {
-        return tutorRepository.save(tutor).getId();
-    }
-
     @Transactional
     @CachePut(value = "tutors", key = "#tutorId")
     @CacheEvict(value = "allTutors", allEntries = true)
     public TutorResponseDTO updateTutor(Long tutorId, UpdateTutorDTO updateTutorDTO) {
         Tutor tutor = tutorRepository.findById(tutorId)
-            .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, tutorId)));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Tutor.class, tutorId));
 
         tutorMapper.updateEntityFromDTO(updateTutorDTO, tutor);
         tutor = tutorRepository.save(tutor);
@@ -65,18 +60,23 @@ public class TutorService {
 
     @Cacheable(value = "tutors", key = "#id")
     public TutorResponseDTO get(Long id) {
-        return tutorRepository.findById(id)
+        return tutorRepository
+            .findById(id)
             .map(tutorMapper::toResponseDTO)
-            .orElseThrow(() -> new EntityNotFoundException(
-                String.format(ErrorMessages.USER_NOT_FOUND, id)));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Tutor.class, id));
     }
 
     @Transactional
     @CacheEvict(value = {"tutors", "allTutors"}, allEntries = true)
     public void deleteById(Long id) {
-        Tutor tutor = tutorRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, id)));
+        tutorRepository.findById(id)
+            .ifPresentOrElse(
+                this::deleteTutor,
+                () -> ExceptionUtils.throwEntityNotFoundException(Tutor.class, id)
+            );
+    }
 
+    private void deleteTutor(Tutor tutor) {
         tutor.getStudents().forEach(student -> student.getTutors().remove(tutor));
         tutorRepository.delete(tutor);
     }
@@ -96,24 +96,27 @@ public class TutorService {
             .map(tutor -> tutor.getStudents().stream()
                 .map(Student::getId)
                 .collect(Collectors.toSet()))
-            .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, tutorId)));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Tutor.class, tutorId));
     }
 
     @Transactional
     @CacheEvict(value = {"tutors", "allTutors"}, allEntries = true)
     public void updateTutorStudents(Long tutorId, Set<Long> studentIds) {
         Tutor tutor = tutorRepository.findById(tutorId)
-            .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, tutorId)));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Tutor.class, tutorId));
 
         Set<Student> newStudents = new HashSet<>(studentRepository.findAllById(studentIds));
 
+        // Remove tutor from students that are no longer associated
         tutor.getStudents().stream()
             .filter(student -> !newStudents.contains(student))
             .forEach(student -> student.getTutors().remove(tutor));
 
+        // Update tutor's students
         tutor.setStudents(newStudents);
-        newStudents.forEach(student -> student.getTutors().add(tutor));
 
+        // Add tutor to new students
+        newStudents.forEach(student -> student.getTutors().add(tutor));
         tutorRepository.save(tutor);
     }
 }
