@@ -7,7 +7,7 @@ import com.tutorhelper.dto.student.StudentSummaryDTO;
 import com.tutorhelper.dto.student.UpdateStudentDTO;
 import com.tutorhelper.response.PagedResponse;
 import com.tutorhelper.service.StudentService;
-import com.tutorhelper.util.LocationURIBuilder;
+import com.tutorhelper.utils.LocationURIBuilder;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;

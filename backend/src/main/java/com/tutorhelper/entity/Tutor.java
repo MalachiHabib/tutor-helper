@@ -13,15 +13,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tutors")
-@DiscriminatorValue("TUTOR")
-@PrimaryKeyJoinColumn(name = "user_id")
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "tutors")
+@DiscriminatorValue("TUTOR")
+@PrimaryKeyJoinColumn(name = "user_id")
 public class Tutor extends User {
 
     @ManyToMany(mappedBy = "tutors", fetch = FetchType.LAZY)
     private Set<Student> students = new HashSet<>();
 
+    public void removeStudent(Student student) {
+        this.getStudents().remove(student);
+    }
 }

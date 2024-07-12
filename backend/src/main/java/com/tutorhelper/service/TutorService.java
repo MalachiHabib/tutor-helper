@@ -10,7 +10,7 @@ import com.tutorhelper.entity.Tutor;
 import com.tutorhelper.mapper.TutorMapper;
 import com.tutorhelper.repository.StudentRepository;
 import com.tutorhelper.repository.TutorRepository;
-import com.tutorhelper.util.IntuitiveCollectionUtils;
+import com.tutorhelper.utils.IntuitiveCollectionUtils;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.List;

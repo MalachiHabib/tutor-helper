@@ -1,4 +1,4 @@
-package com.tutorhelper.util;
+package com.tutorhelper.utils;
 
 import java.util.Collection;
 import lombok.experimental.UtilityClass;

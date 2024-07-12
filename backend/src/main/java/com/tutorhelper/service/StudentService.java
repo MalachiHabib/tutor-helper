@@ -1,6 +1,5 @@
 package com.tutorhelper.service;
 
-import com.tutorhelper.config.ErrorMessages;
 import com.tutorhelper.dto.student.CreateStudentDTO;
 import com.tutorhelper.dto.student.StudentResponseDTO;
 import com.tutorhelper.dto.student.StudentSummaryDTO;
@@ -10,8 +9,8 @@ import com.tutorhelper.entity.Tutor;
 import com.tutorhelper.mapper.StudentMapper;
 import com.tutorhelper.repository.StudentRepository;
 import com.tutorhelper.repository.TutorRepository;
-import com.tutorhelper.util.IntuitiveCollectionUtils;
-import jakarta.persistence.EntityNotFoundException;
+import com.tutorhelper.utils.ExceptionUtils;
+import com.tutorhelper.utils.IntuitiveCollectionUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +36,7 @@ public class StudentService {
     public Long createStudent(CreateStudentDTO createStudentDTO) {
         Student student = studentMapper.toEntity(createStudentDTO);
         assignTutorsToStudent(student, createStudentDTO.getTutorIds());
-        return saveAndReturnStudentId(student);
+        return studentRepository.save(student).getId();
     }
 
     private void assignTutorsToStudent(Student student, Set<Long> tutorIds) {
@@ -47,16 +46,12 @@ public class StudentService {
         }
     }
 
-    private Long saveAndReturnStudentId(Student student) {
-        return studentRepository.save(student).getId();
-    }
-
     @Transactional
     @CachePut(value = "students", key = "#studentId")
     @CacheEvict(value = "allStudents", allEntries = true)
     public StudentResponseDTO updateStudent(Long studentId, UpdateStudentDTO updateStudentDTO) {
         Student student = studentRepository.findById(studentId)
-            .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, studentId)));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Student.class, studentId));
 
         studentMapper.updateEntityFromDTO(updateStudentDTO, student);
         student = studentRepository.save(student);
@@ -68,18 +63,21 @@ public class StudentService {
         return studentRepository
             .findById(id)
             .map(studentMapper::toResponseDTO)
-            .orElseThrow(() -> new EntityNotFoundException(
-                String.format(ErrorMessages.USER_NOT_FOUND, id)));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Student.class, id));
     }
 
     @Transactional
     @CacheEvict(value = {"students", "allStudents"}, allEntries = true)
     public void deleteById(Long id) {
-        Student student = studentRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, id)));
+        studentRepository.findById(id)
+            .ifPresentOrElse(
+                this::deleteStudent,
+                () -> ExceptionUtils.throwEntityNotFoundException(Student.class, id)
+            );
+    }
 
-        // remove the students from the tutors before deleting
-        student.getTutors().forEach(tutor -> tutor.getStudents().remove(student));
+    private void deleteStudent(Student student) {
+        student.getTutors().forEach(tutor -> tutor.removeStudent(student));
         studentRepository.delete(student);
     }
 
@@ -98,14 +96,14 @@ public class StudentService {
             .map(student -> student.getTutors().stream()
                 .map(Tutor::getId)
                 .collect(Collectors.toSet()))
-            .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, studentId)));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Student.class, studentId));
     }
 
     @Transactional
     @CacheEvict(value = {"students", "allStudents"}, allEntries = true)
     public void updateStudentTutors(Long studentId, Set<Long> tutorIds) {
         Student student = studentRepository.findById(studentId)
-            .orElseThrow(() -> new EntityNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, studentId)));
+            .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Student.class, studentId));
 
         Set<Tutor> newTutors = new HashSet<>(tutorRepository.findAllById(tutorIds));
 

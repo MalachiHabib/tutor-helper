@@ -1,4 +1,4 @@
-package com.tutorhelper.util;
+package com.tutorhelper.utils;
 
 import java.net.URI;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -12,5 +12,5 @@ public class LocationURIBuilder {
             .buildAndExpand(uriVariableValues)
             .toUri();
     }
-    
+
 }

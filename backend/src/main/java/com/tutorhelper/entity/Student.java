@@ -16,12 +16,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "students")
-@DiscriminatorValue("STUDENT")
-@PrimaryKeyJoinColumn(name = "user_id")
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "students")
+@DiscriminatorValue("STUDENT")
+@PrimaryKeyJoinColumn(name = "user_id")
 public class Student extends User {
 
     @ManyToMany(fetch = FetchType.LAZY)
