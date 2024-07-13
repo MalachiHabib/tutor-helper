@@ -1,4 +1,4 @@
-package com.tutorhelper.utils;
+package com.tutorhelper.util;
 
 import java.util.function.Supplier;
 

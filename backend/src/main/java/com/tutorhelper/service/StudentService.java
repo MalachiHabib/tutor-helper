@@ -1,5 +1,10 @@
 package com.tutorhelper.service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.tutorhelper.dto.student.CreateStudentDTO;
 import com.tutorhelper.dto.student.StudentResponseDTO;
 import com.tutorhelper.dto.student.StudentSummaryDTO;
@@ -9,12 +14,8 @@ import com.tutorhelper.entity.Tutor;
 import com.tutorhelper.mapper.StudentMapper;
 import com.tutorhelper.repository.StudentRepository;
 import com.tutorhelper.repository.TutorRepository;
-import com.tutorhelper.utils.ExceptionUtils;
-import com.tutorhelper.utils.IntuitiveCollectionUtils;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.tutorhelper.util.ExceptionUtils;
+import com.tutorhelper.util.IntuitiveCollectionUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;

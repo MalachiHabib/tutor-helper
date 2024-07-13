@@ -1,6 +1,7 @@
-package com.tutorhelper.utils;
+package com.tutorhelper.util;
 
 import java.net.URI;
+
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 public class LocationURIBuilder {

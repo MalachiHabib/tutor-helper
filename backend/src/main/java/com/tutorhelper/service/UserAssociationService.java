@@ -4,7 +4,7 @@ import com.tutorhelper.entity.Student;
 import com.tutorhelper.entity.Tutor;
 import com.tutorhelper.repository.StudentRepository;
 import com.tutorhelper.repository.TutorRepository;
-import com.tutorhelper.utils.ExceptionUtils;
+import com.tutorhelper.util.ExceptionUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

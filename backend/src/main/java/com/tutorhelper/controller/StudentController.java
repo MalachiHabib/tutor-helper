@@ -1,5 +1,9 @@
 package com.tutorhelper.controller;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Set;
+
 import com.tutorhelper.config.Paths;
 import com.tutorhelper.dto.student.CreateStudentDTO;
 import com.tutorhelper.dto.student.StudentResponseDTO;
@@ -7,11 +11,8 @@ import com.tutorhelper.dto.student.StudentSummaryDTO;
 import com.tutorhelper.dto.student.UpdateStudentDTO;
 import com.tutorhelper.response.PagedResponse;
 import com.tutorhelper.service.StudentService;
-import com.tutorhelper.utils.LocationURIBuilder;
+import com.tutorhelper.util.LocationURIBuilder;
 import jakarta.validation.Valid;
-import java.net.URI;
-import java.util.List;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

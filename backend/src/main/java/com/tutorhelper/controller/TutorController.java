@@ -11,7 +11,7 @@ import com.tutorhelper.dto.tutor.TutorSummaryDTO;
 import com.tutorhelper.dto.tutor.UpdateTutorDTO;
 import com.tutorhelper.response.PagedResponse;
 import com.tutorhelper.service.TutorService;
-import com.tutorhelper.utils.LocationURIBuilder;
+import com.tutorhelper.util.LocationURIBuilder;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
