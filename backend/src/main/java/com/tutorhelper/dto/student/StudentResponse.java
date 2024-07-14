@@ -1,10 +1,11 @@
 package com.tutorhelper.dto.student;
 
 import java.util.Set;
+
 import lombok.Data;
 
 @Data
-public class StudentResponseDTO {
+public class StudentResponse {
 
     private Long id;
     private String firstName;

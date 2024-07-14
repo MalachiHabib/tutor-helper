@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.tutorhelper.dto.tutor.CreateTutorDTO;
-import com.tutorhelper.dto.tutor.TutorResponseDTO;
-import com.tutorhelper.dto.tutor.TutorSummaryDTO;
-import com.tutorhelper.dto.tutor.UpdateTutorDTO;
+import com.tutorhelper.dto.tutor.CreateTutorRequest;
+import com.tutorhelper.dto.tutor.TutorResponse;
+import com.tutorhelper.dto.tutor.TutorSummary;
+import com.tutorhelper.dto.tutor.UpdateTutorRequest;
 import com.tutorhelper.entity.Student;
 import com.tutorhelper.entity.Tutor;
 import com.tutorhelper.mapper.TutorMapper;
@@ -34,9 +34,9 @@ public class TutorService {
     @Transactional
     @CacheEvict(value = "allTutors", allEntries = true)
     @CachePut(value = "tutors", key = "#result")
-    public Long createTutor(CreateTutorDTO createTutorDTO) {
-        Tutor tutor = tutorMapper.toEntity(createTutorDTO);
-        assignStudentsToTutor(tutor, createTutorDTO.getStudentIds());
+    public Long createTutor(CreateTutorRequest createTutorRequest) {
+        Tutor tutor = tutorMapper.toEntity(createTutorRequest);
+        assignStudentsToTutor(tutor, createTutorRequest.getStudentIds());
         return tutorRepository.save(tutor).getId();
     }
 
@@ -50,17 +50,17 @@ public class TutorService {
     @Transactional
     @CachePut(value = "tutors", key = "#tutorId")
     @CacheEvict(value = "allTutors", allEntries = true)
-    public TutorResponseDTO updateTutor(Long tutorId, UpdateTutorDTO updateTutorDTO) {
+    public TutorResponse updateTutor(Long tutorId, UpdateTutorRequest updateTutorRequest) {
         Tutor tutor = tutorRepository.findById(tutorId)
             .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Tutor.class, tutorId));
 
-        tutorMapper.updateEntityFromDTO(updateTutorDTO, tutor);
+        tutorMapper.updateEntityFromDTO(updateTutorRequest, tutor);
         tutor = tutorRepository.save(tutor);
         return tutorMapper.toResponseDTO(tutor);
     }
 
     @Cacheable(value = "tutors", key = "#id")
-    public TutorResponseDTO get(Long id) {
+    public TutorResponse get(Long id) {
         return tutorRepository
             .findById(id)
             .map(tutorMapper::toResponseDTO)
@@ -83,7 +83,7 @@ public class TutorService {
     }
 
     @Cacheable(value = "allTutors")
-    public List<TutorSummaryDTO> getAll() {
+    public List<TutorSummary> getAll() {
         return tutorRepository
             .findAll()
             .stream()

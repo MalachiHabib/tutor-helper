@@ -1,92 +1,108 @@
 package com.tutorhelper.mapper;
 
-import com.tutorhelper.dto.tutor.CreateTutorDTO;
-import com.tutorhelper.dto.tutor.TutorResponseDTO;
-import com.tutorhelper.dto.tutor.TutorSummaryDTO;
-import com.tutorhelper.dto.tutor.UpdateTutorDTO;
-import com.tutorhelper.entity.Student;
-import com.tutorhelper.entity.Tutor;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.tutorhelper.dto.tutor.CreateTutorRequest;
+import com.tutorhelper.dto.tutor.TutorResponse;
+import com.tutorhelper.dto.tutor.TutorSummary;
+import com.tutorhelper.dto.tutor.UpdateTutorRequest;
+import com.tutorhelper.entity.Student;
+import com.tutorhelper.entity.Tutor;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class TutorMapper {
 
-    public TutorResponseDTO toResponseDTO(Tutor tutor) {
+    public TutorResponse toResponseDTO(Tutor tutor) {
         if (tutor == null) {
             return null;
         }
 
-        TutorResponseDTO tutorResponseDTO = new TutorResponseDTO();
-        tutorResponseDTO.setStudentIds(studentsToIds(tutor.getStudents()));
-        tutorResponseDTO.setId(tutor.getId());
-        tutorResponseDTO.setFirstName(tutor.getFirstName());
-        tutorResponseDTO.setLastName(tutor.getLastName());
-        tutorResponseDTO.setEmail(tutor.getEmail());
-        tutorResponseDTO.setPhone(tutor.getPhone());
+        TutorResponse tutorResponse = new TutorResponse();
+        tutorResponse.setStudentIds(studentsToIds(tutor.getStudents()));
+        tutorResponse.setId(tutor.getId());
+        tutorResponse.setFirstName(tutor.getFirstName());
+        tutorResponse.setLastName(tutor.getLastName());
+        tutorResponse.setEmail(tutor.getEmail());
+        tutorResponse.setPhone(tutor.getPhone());
 
-        return tutorResponseDTO;
+        return tutorResponse;
     }
 
-    public CreateTutorDTO toCreateDTO(Tutor tutor) {
+    public CreateTutorRequest toCreateDTO(Tutor tutor) {
         if (tutor == null) {
             return null;
         }
 
-        CreateTutorDTO createTutorDTO = new CreateTutorDTO();
-        createTutorDTO.setStudentIds(studentsToIds(tutor.getStudents()));
-        createTutorDTO.setFirstName(tutor.getFirstName());
-        createTutorDTO.setLastName(tutor.getLastName());
-        createTutorDTO.setEmail(tutor.getEmail());
-        createTutorDTO.setPhone(tutor.getPhone());
+        CreateTutorRequest createTutorRequest = new CreateTutorRequest();
+        createTutorRequest.setStudentIds(studentsToIds(tutor.getStudents()));
+        createTutorRequest.setFirstName(tutor.getFirstName());
+        createTutorRequest.setLastName(tutor.getLastName());
+        createTutorRequest.setEmail(tutor.getEmail());
+        createTutorRequest.setPhone(tutor.getPhone());
 
-        return createTutorDTO;
+        return createTutorRequest;
     }
 
-    public TutorSummaryDTO toSummaryDTO(Tutor tutor) {
+    public TutorSummary toSummaryDTO(Tutor tutor) {
         if (tutor == null) {
             return null;
         }
 
-        TutorSummaryDTO tutorSummaryDTO = new TutorSummaryDTO();
-        tutorSummaryDTO.setId(tutor.getId());
-        tutorSummaryDTO.setFirstName(tutor.getFirstName());
-        tutorSummaryDTO.setLastName(tutor.getLastName());
+        TutorSummary tutorSummary = new TutorSummary();
+        tutorSummary.setId(tutor.getId());
+        tutorSummary.setFirstName(tutor.getFirstName());
+        tutorSummary.setLastName(tutor.getLastName());
 
-        return tutorSummaryDTO;
+        return tutorSummary;
     }
 
-    public Tutor toEntity(CreateTutorDTO createTutorDTO) {
-        if (createTutorDTO == null) {
+    public Tutor toEntity(CreateTutorRequest createTutorRequest) {
+        if (createTutorRequest == null) {
             return null;
         }
 
         Tutor tutor = new Tutor();
-        tutor.setFirstName(createTutorDTO.getFirstName());
-        tutor.setLastName(createTutorDTO.getLastName());
-        tutor.setEmail(createTutorDTO.getEmail());
-        tutor.setPhone(createTutorDTO.getPhone());
+        tutor.setFirstName(createTutorRequest.getFirstName());
+        tutor.setLastName(createTutorRequest.getLastName());
+        tutor.setEmail(createTutorRequest.getEmail());
+        tutor.setPhone(createTutorRequest.getPhone());
 
         return tutor;
     }
 
-    public void updateEntityFromDTO(UpdateTutorDTO updateTutorDTO, Tutor tutor) {
-        if (updateTutorDTO == null || tutor == null) {
+    public Tutor toEntity(TutorResponse tutorResponse) {
+        if (tutorResponse == null) {
+            return null;
+        }
+
+        Tutor tutor = new Tutor();
+        tutor.setFirstName(tutorResponse.getFirstName());
+        tutor.setLastName(tutorResponse.getLastName());
+        tutor.setEmail(tutorResponse.getEmail());
+        tutor.setPhone(tutorResponse.getPhone());
+
+        return tutor;
+    }
+
+
+    public void updateEntityFromDTO(UpdateTutorRequest updateTutorRequest, Tutor tutor) {
+        if (updateTutorRequest == null || tutor == null) {
             return;
         }
 
-        if (updateTutorDTO.getFirstName() != null) {
-            tutor.setFirstName(updateTutorDTO.getFirstName());
+        if (updateTutorRequest.getFirstName() != null) {
+            tutor.setFirstName(updateTutorRequest.getFirstName());
         }
-        if (updateTutorDTO.getLastName() != null) {
-            tutor.setLastName(updateTutorDTO.getLastName());
+        if (updateTutorRequest.getLastName() != null) {
+            tutor.setLastName(updateTutorRequest.getLastName());
         }
-        if (updateTutorDTO.getEmail() != null) {
-            tutor.setEmail(updateTutorDTO.getEmail());
+        if (updateTutorRequest.getEmail() != null) {
+            tutor.setEmail(updateTutorRequest.getEmail());
         }
-        if (updateTutorDTO.getPhone() != null) {
-            tutor.setPhone(updateTutorDTO.getPhone());
+        if (updateTutorRequest.getPhone() != null) {
+            tutor.setPhone(updateTutorRequest.getPhone());
         }
     }
 

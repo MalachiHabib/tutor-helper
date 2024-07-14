@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.tutorhelper.dto.student.CreateStudentDTO;
-import com.tutorhelper.dto.student.StudentResponseDTO;
-import com.tutorhelper.dto.student.StudentSummaryDTO;
-import com.tutorhelper.dto.student.UpdateStudentDTO;
+import com.tutorhelper.dto.student.CreateStudentRequest;
+import com.tutorhelper.dto.student.StudentResponse;
+import com.tutorhelper.dto.student.StudentSummary;
+import com.tutorhelper.dto.student.UpdateStudentRequest;
 import com.tutorhelper.entity.Student;
 import com.tutorhelper.entity.Tutor;
 import com.tutorhelper.mapper.StudentMapper;
@@ -16,7 +16,7 @@ import com.tutorhelper.repository.StudentRepository;
 import com.tutorhelper.repository.TutorRepository;
 import com.tutorhelper.util.ExceptionUtils;
 import com.tutorhelper.util.IntuitiveCollectionUtils;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class StudentService {
 
     private final StudentRepository studentRepository;
@@ -34,9 +34,9 @@ public class StudentService {
     @Transactional
     @CacheEvict(value = "allStudents", allEntries = true)
     @CachePut(value = "students", key = "#result")
-    public Long createStudent(CreateStudentDTO createStudentDTO) {
-        Student student = studentMapper.toEntity(createStudentDTO);
-        assignTutorsToStudent(student, createStudentDTO.getTutorIds());
+    public Long createStudent(CreateStudentRequest createStudentRequest) {
+        Student student = studentMapper.toEntity(createStudentRequest);
+        assignTutorsToStudent(student, createStudentRequest.getTutorIds());
         return studentRepository.save(student).getId();
     }
 
@@ -50,17 +50,17 @@ public class StudentService {
     @Transactional
     @CachePut(value = "students", key = "#studentId")
     @CacheEvict(value = "allStudents", allEntries = true)
-    public StudentResponseDTO updateStudent(Long studentId, UpdateStudentDTO updateStudentDTO) {
+    public StudentResponse updateStudent(Long studentId, UpdateStudentRequest updateStudentRequest) {
         Student student = studentRepository.findById(studentId)
             .orElseThrow(ExceptionUtils.entityNotFoundExceptionSupplier(Student.class, studentId));
 
-        studentMapper.updateEntityFromDTO(updateStudentDTO, student);
+        studentMapper.updateEntityFromDTO(updateStudentRequest, student);
         student = studentRepository.save(student);
         return studentMapper.toResponseDTO(student);
     }
 
     @Cacheable(value = "students", key = "#id")
-    public StudentResponseDTO get(Long id) {
+    public StudentResponse get(Long id) {
         return studentRepository
             .findById(id)
             .map(studentMapper::toResponseDTO)
@@ -83,7 +83,7 @@ public class StudentService {
     }
 
     @Cacheable(value = "allStudents")
-    public List<StudentSummaryDTO> getAll() {
+    public List<StudentSummary> getAll() {
         return studentRepository
             .findAll()
             .stream()

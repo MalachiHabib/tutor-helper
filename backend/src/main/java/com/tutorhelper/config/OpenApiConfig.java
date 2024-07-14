@@ -15,6 +15,6 @@ public class OpenApiConfig {
                 // todo: reference from application.props
                 .title("Tutor Helper API")
                 .version("1.0")
-                .description("API for managing student-tutor associations"));
+                .description("API for tutor / student management"));
     }
 }

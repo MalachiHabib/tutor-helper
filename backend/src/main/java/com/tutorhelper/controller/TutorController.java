@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 import com.tutorhelper.config.Paths;
-import com.tutorhelper.dto.tutor.CreateTutorDTO;
-import com.tutorhelper.dto.tutor.TutorResponseDTO;
-import com.tutorhelper.dto.tutor.TutorSummaryDTO;
-import com.tutorhelper.dto.tutor.UpdateTutorDTO;
+import com.tutorhelper.docs.TutorApiDocs;
+import com.tutorhelper.dto.tutor.CreateTutorRequest;
+import com.tutorhelper.dto.tutor.TutorResponse;
+import com.tutorhelper.dto.tutor.TutorSummary;
+import com.tutorhelper.dto.tutor.UpdateTutorRequest;
 import com.tutorhelper.response.PagedResponse;
 import com.tutorhelper.service.TutorService;
 import com.tutorhelper.util.LocationURIBuilder;
@@ -27,35 +28,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/tutors")
 @AllArgsConstructor
-public class TutorController {
+public class TutorController implements TutorApiDocs {
 
     private final TutorService tutorService;
 
     @PostMapping
-    public ResponseEntity<Void> createTutor(@Valid @RequestBody CreateTutorDTO createTutorDto) {
-        Long tutorId = tutorService.createTutor(createTutorDto);
+    public ResponseEntity<Void> createTutor(@Valid @RequestBody CreateTutorRequest createTutorRequest) {
+        Long tutorId = tutorService.createTutor(createTutorRequest);
         URI location = LocationURIBuilder.buildLocationURI(Paths.ID_PATH, tutorId);
         return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{tutorId}")
-    public ResponseEntity<TutorResponseDTO> getTutorById(@PathVariable Long tutorId) {
-        TutorResponseDTO tutorResponseDTO = tutorService.get(tutorId);
-        return ResponseEntity.ok(tutorResponseDTO);
+    public ResponseEntity<TutorResponse> getTutorById(@PathVariable Long tutorId) {
+        TutorResponse tutorResponse = tutorService.get(tutorId);
+        return ResponseEntity.ok(tutorResponse);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<PagedResponse<TutorSummaryDTO>> getAllTutors() {
-        List<TutorSummaryDTO> tutorSummaryDTOs = tutorService.getAll();
-        return ResponseEntity.ok(PagedResponse.from(tutorSummaryDTOs));
+    public ResponseEntity<PagedResponse<TutorSummary>> getAllTutors() {
+        List<TutorSummary> tutorSummaries = tutorService.getAll();
+        return ResponseEntity.ok(PagedResponse.from(tutorSummaries));
     }
 
     @PutMapping("/{tutorId}")
-    public ResponseEntity<TutorResponseDTO> updateTutor(
+    public ResponseEntity<TutorResponse> updateTutor(
         @PathVariable Long tutorId,
-        @Valid @RequestBody UpdateTutorDTO updateTutorDTO
+        @Valid @RequestBody UpdateTutorRequest updateTutorRequest
     ) {
-        TutorResponseDTO updatedTutor = tutorService.updateTutor(tutorId, updateTutorDTO);
+        TutorResponse updatedTutor = tutorService.updateTutor(tutorId, updateTutorRequest);
         return ResponseEntity.ok(updatedTutor);
     }
 

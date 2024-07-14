@@ -1,11 +1,11 @@
-import { LandingPage } from './components/LandingPage';
-import { useEffect } from 'react';
-import { themeChange } from 'theme-change';
+import {Dashboard} from './components/Dashboard';
 
-export default function App() {
-  useEffect(() => {
-    themeChange(false);
-  }, []);
-
-  return <LandingPage />;
+function App() {
+    return (
+        <div className='App'>
+            <Dashboard />
+        </div>
+    );
 }
+
+export default App;

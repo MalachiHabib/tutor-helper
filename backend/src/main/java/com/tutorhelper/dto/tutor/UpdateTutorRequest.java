@@ -1,4 +1,4 @@
-package com.tutorhelper.dto.student;
+package com.tutorhelper.dto.tutor;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Null;
@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UpdateStudentDTO {
+public class UpdateTutorRequest {
 
     @Null(message = "ID must be null for new students (it is auto generated)")
     private Long id;

@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Set;
 
 import com.tutorhelper.config.Paths;
-import com.tutorhelper.dto.student.CreateStudentDTO;
-import com.tutorhelper.dto.student.StudentResponseDTO;
-import com.tutorhelper.dto.student.StudentSummaryDTO;
-import com.tutorhelper.dto.student.UpdateStudentDTO;
+import com.tutorhelper.docs.StudentApiDocs;
+import com.tutorhelper.dto.student.CreateStudentRequest;
+import com.tutorhelper.dto.student.StudentResponse;
+import com.tutorhelper.dto.student.StudentSummary;
+import com.tutorhelper.dto.student.UpdateStudentRequest;
 import com.tutorhelper.response.PagedResponse;
 import com.tutorhelper.service.StudentService;
 import com.tutorhelper.util.LocationURIBuilder;
@@ -25,37 +26,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/students")
 @AllArgsConstructor
-public class StudentController {
+@RequestMapping("/students")
+public class StudentController implements StudentApiDocs {
 
     private final StudentService studentService;
 
     @PostMapping
-    public ResponseEntity<Void> createStudent(@Valid @RequestBody CreateStudentDTO createStudentDto) {
-        Long studentId = studentService.createStudent(createStudentDto);
+    public ResponseEntity<Void> createStudent(@Valid @RequestBody CreateStudentRequest createStudentRequest) {
+        Long studentId = studentService.createStudent(createStudentRequest);
         URI location = LocationURIBuilder.buildLocationURI(Paths.ID_PATH, studentId);
         return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{studentId}")
-    public ResponseEntity<StudentResponseDTO> updateStudent(
+    public ResponseEntity<StudentResponse> updateStudent(
         @PathVariable Long studentId,
-        @Valid @RequestBody UpdateStudentDTO createStudentDto
+        @Valid @RequestBody UpdateStudentRequest createStudentDto
     ) {
-        StudentResponseDTO updatedStudent = studentService.updateStudent(studentId, createStudentDto);
+        StudentResponse updatedStudent = studentService.updateStudent(studentId, createStudentDto);
         return ResponseEntity.ok(updatedStudent);
     }
 
     @GetMapping("/{studentId}")
-    public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable Long studentId) {
-        StudentResponseDTO studentResponseDTO = studentService.get(studentId);
-        return ResponseEntity.ok(studentResponseDTO);
+    public ResponseEntity<StudentResponse> getStudentById(@PathVariable Long studentId) {
+        StudentResponse studentResponse = studentService.get(studentId);
+        return ResponseEntity.ok(studentResponse);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<PagedResponse<StudentSummaryDTO>> getAllStudents() {
-        List<StudentSummaryDTO> createStudentDTOS = studentService.getAll();
+    public ResponseEntity<PagedResponse<StudentSummary>> getAllStudents() {
+        List<StudentSummary> createStudentDTOS = studentService.getAll();
         return ResponseEntity.ok(PagedResponse.from(createStudentDTOS));
     }
 

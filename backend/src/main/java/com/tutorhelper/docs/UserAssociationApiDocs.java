@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "User Associations", description = "API endpoints for managing associations between students and tutors")
+@Tag(name = "User Associations", description = "Endpoints for managing associations between students and tutors")
 public interface UserAssociationApiDocs {
 
     @Operation(
