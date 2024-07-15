@@ -1,5 +1,5 @@
-import {CardWithIcon} from './CardWithIcon';
-import {Button} from '@radix-ui/themes';
+import { CardWithIcon } from './CardWithIcon';
+import { Button } from '@radix-ui/themes';
 
 export function RecommendedResources() {
     return (

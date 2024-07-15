@@ -1,5 +1,5 @@
-import {ReactNode} from 'react';
-import {Card} from '@radix-ui/themes';
+import { ReactNode } from 'react';
+import { Card } from '@radix-ui/themes';
 
 type CardWithIconProps = {
     icon: string;
@@ -7,7 +7,7 @@ type CardWithIconProps = {
     children: ReactNode;
 };
 
-export function CardWithIcon({icon, title, children}: CardWithIconProps) {
+export function CardWithIcon({ icon, title, children }: CardWithIconProps) {
     return (
         <Card className='mb-5 bg-white'>
             <div className='p-5'>

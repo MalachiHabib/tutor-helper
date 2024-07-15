@@ -4,7 +4,7 @@ type NavItemProps = {
     active?: boolean;
 };
 
-export function NavItem({icon, text, active = false}: NavItemProps) {
+export function NavItem({ icon, text, active = false }: NavItemProps) {
     return (
         <a
             href='#'

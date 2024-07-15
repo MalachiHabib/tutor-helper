@@ -1,4 +1,4 @@
-import {Button, Card} from '@radix-ui/themes';
+import { Card } from 'components/ui/Card';
 
 export function DashboardHeader() {
     return (
@@ -9,9 +9,9 @@ export function DashboardHeader() {
                     Python Expert | 4.9 ⭐ (50 sessions)
                 </p>
             </div>
-            <Button className='bg-blue-600 text-white hover:bg-blue-700'>
+            <button className='bg-blue-600 text-white hover:bg-blue-700'>
                 Message Tutor
-            </Button>
+            </button>
         </Card>
     );
 }

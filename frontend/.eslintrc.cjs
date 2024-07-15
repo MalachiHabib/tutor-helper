@@ -21,8 +21,15 @@ module.exports = {
         },
     },
     rules: {
-        'prettier/prettier': ['error', {singleQuote: true, jsxSingleQuote: true}],
-        '@typescript-eslint/no-unused-vars': ['error', {argsIgnorePattern: '^_'}],
+        'prettier/prettier': ['error', {
+            singleQuote: true,
+            jsxSingleQuote: true,
+            bracketSpacing: true,
+            tabWidth: 4,
+            trailingComma: 'all',
+            printWidth: 80,
+        }],
+        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
     },

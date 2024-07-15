@@ -1,11 +1,11 @@
-import {CardWithIcon} from './CardWithIcon';
+import { CardWithIcon } from './CardWithIcon';
 
 type InsightItemProps = {
     value: string;
     label: string;
 };
 
-function InsightItem({value, label}: InsightItemProps) {
+function InsightItem({ value, label }: InsightItemProps) {
     return (
         <div className='text-center'>
             <div className='text-2xl font-bold text-blue-600'>{value}</div>

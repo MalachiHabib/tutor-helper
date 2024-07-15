@@ -1,5 +1,5 @@
-import {NavItem} from './NavItem';
-import {TutorItem} from './TutorItem';
+import { NavItem } from './NavItem';
+import { TutorItem } from './TutorItem';
 
 export function Sidebar() {
     return (

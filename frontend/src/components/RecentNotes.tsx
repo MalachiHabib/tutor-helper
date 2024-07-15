@@ -1,12 +1,12 @@
-import {CardWithIcon} from './CardWithIcon';
-import {Button} from '@radix-ui/themes';
+import { CardWithIcon } from './CardWithIcon';
+import { Button } from '@radix-ui/themes';
 
 type NoteItemProps = {
     title: string;
     date: string;
 };
 
-function NoteItem({title, date}: NoteItemProps) {
+function NoteItem({ title, date }: NoteItemProps) {
     return (
         <li className='border-b border-slate-200 pb-4 last:border-b-0'>
             <strong className='text-slate-800'>{title}</strong>

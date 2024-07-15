@@ -1,7 +1,7 @@
 {
     "arrowParens": "always",
     "bracketSameLine": false,
-    "bracketSpacing": false,
+    "bracketSpacing": true,
     "embeddedLanguageFormatting": "auto",
     "htmlWhitespaceSensitivity": "css",
     "insertPragma": false,
@@ -24,5 +24,13 @@
         "wrapperClass",
         "labelClass",
         "classNames"
-    ]
+    ],
+    "importOrder": [
+        "^@core/(.*)$",
+        "^@server/(.*)$",
+        "^@ui/(.*)$",
+        "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true
 }

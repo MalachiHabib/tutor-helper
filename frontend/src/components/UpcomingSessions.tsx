@@ -1,5 +1,5 @@
-import {Button} from '@radix-ui/themes';
-import {CardWithIcon} from './CardWithIcon';
+import { Button } from '@radix-ui/themes';
+import { CardWithIcon } from './CardWithIcon';
 
 type SessionItemProps = {
     title: string;
@@ -7,7 +7,7 @@ type SessionItemProps = {
     time: string;
 };
 
-function SessionItem({title, date, time}: SessionItemProps) {
+function SessionItem({ title, date, time }: SessionItemProps) {
     return (
         <li className='border-b border-slate-200 pb-4 last:border-b-0'>
             <strong className='text-slate-800'>{title}</strong>
