@@ -1,5 +1,5 @@
-import { Button } from '@radix-ui/themes';
-import { CardWithIcon } from './CardWithIcon';
+import { Button } from 'components/ui/Button';
+import { CardWithIcon } from 'components/CardWithIcon';
 
 type SessionItemProps = {
     title: string;

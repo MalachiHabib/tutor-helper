@@ -1,5 +1,5 @@
-import { CardWithIcon } from './CardWithIcon';
-import { Button } from '@radix-ui/themes';
+import { CardWithIcon } from 'components/CardWithIcon';
+import { Button } from 'components/ui/Button';
 
 export function LearningFocus() {
     return (

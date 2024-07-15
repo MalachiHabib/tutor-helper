@@ -1,19 +1,27 @@
+import { Link, useLocation } from 'react-router-dom';
+
 type NavItemProps = {
     icon: string;
     text: string;
-    active?: boolean;
+    to: string;
 };
 
-export function NavItem({ icon, text, active = false }: NavItemProps) {
+export function NavItem({ icon, text, to }: NavItemProps) {
+    const location = useLocation();
+    const active = location.pathname === to;
+
     return (
-        <a
-            href='#'
-            className={`flex items-center rounded px-4 py-3 transition ${
-                active ? 'bg-blue-600' : 'hover:bg-slate-700'
+        <Link
+            to={to}
+            className={`flex items-center space-x-3 rounded-lg p-2 transition-colors ${
+                active ? 'bg-primary text-primary-content' : 'hover:bg-base-300'
             }`}
         >
-            <i className={`fas ${icon} mr-2 w-5`}></i>
-            {text}
-        </a>
+            <i
+                className={`fas ${icon} w-5`}
+                aria-hidden='true'
+            ></i>
+            <span>{text}</span>
+        </Link>
     );
 }

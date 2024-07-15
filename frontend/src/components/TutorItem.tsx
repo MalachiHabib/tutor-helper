@@ -1,17 +1,37 @@
+import { NavLink } from 'react-router-dom';
+
 type TutorItemProps = {
+    id: number;
     name: string;
     subject: string;
-    active?: boolean;
 };
 
-export function TutorItem({ name, subject, active = false }: TutorItemProps) {
+export function TutorItem({ id, name, subject }: TutorItemProps) {
     return (
-        <div
-            className={`mb-1 cursor-pointer rounded px-4 py-2 transition ${
-                active ? 'bg-blue-600' : 'hover:bg-slate-700'
-            }`}
+        <NavLink
+            to={`/tutors/${id}`}
+            className={({ isActive }) =>
+                `flex items-center space-x-3 rounded-lg p-2 transition-colors ${
+                    isActive
+                        ? 'bg-primary text-primary-content'
+                        : 'hover:bg-base-300'
+                }`
+            }
         >
-            {name} ({subject})
-        </div>
+            <div className='avatar placeholder'>
+                <div className='w-8 rounded-full bg-neutral text-neutral-content'>
+                    <span className='text-xs'>
+                        {name
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')}
+                    </span>
+                </div>
+            </div>
+            <div>
+                <div className='font-medium'>{name}</div>
+                <div className='text-sm opacity-75'>{subject}</div>
+            </div>
+        </NavLink>
     );
 }

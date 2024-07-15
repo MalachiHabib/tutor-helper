@@ -1,4 +1,4 @@
-import { CardWithIcon } from './CardWithIcon';
+import { CardWithIcon } from 'components/CardWithIcon';
 
 type InsightItemProps = {
     value: string;
