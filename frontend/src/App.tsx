@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Sidebar } from 'components/Sidebar';
-import { TutorsDashboard } from 'components/TutorsDashboard';
+import { TutorsDashboard } from 'components/dashboard/TutorsDashboard';
 
 function App() {
     return (

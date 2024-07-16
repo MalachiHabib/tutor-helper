@@ -3,7 +3,7 @@ import { Button } from 'components/ui/Button';
 
 export function DashboardHeader() {
     return (
-        <Card className='mb-6 bg-white shadow-sm'>
+        <Card className='mb-2 bg-white shadow-sm'>
             <div className='flex items-center justify-between p-6'>
                 <div className='space-y-1'>
                     <h1 className='text-2xl font-bold text-gray-900'>
